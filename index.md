@@ -1,47 +1,25 @@
-## Welcome to GitHub Pages
-
-You can use the [editor on GitHub](https://github.com/carterene/Vortex/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
 ## Welcome
 Vortex is a parameterizable and synthesizable open-source RISC-V GPGPU written in Verilog. 
 ## Document Purpose
 The purpose of this document is to describe the design and implementation of the core as well as provide other useful information on using the core. 
 ## Useful Links
-Source code. Most recent publication
+Source code. [Most recent publication](https://arxiv.org/pdf/2002.12151.pdf)
 ## Quick Start
+```
+code goes here
+```
 # Introduction
 ## Vortex Core Overview
+![Vortex Core](Vortex_Pipeline.png)
+
 The Vortex System implements a SIMT architecture with a minimal RISC-V ISA extension on top of the RISC-V 32 bit integer and multiple extensions (RV32IM) that implements the execution of OpenCL programs. 
 
 Below is a detailed description of the new ISA extension. 
-Wspawn - spawn new warps at pc
-Tmc - change thread mask to activate threads
-Spilt - control flow divergence
-Join - control flow reconvergence
-Bar - hardware warps barrier
+- **Wspawn** - spawn new warps at pc
+- **Tmc** - change thread mask to activate threads
+- **Spilt** - control flow divergence
+- **Join** - control flow reconvergence
+- **Bar** - hardware warps barrier
 
 The Vortex pipeline is split into four main modules: front_end(), back_end(), scheduler(), and dmem_controller(). The Front-End of the vortex core includes the Fetch and Decode stages and pipeline registers. The Back-End consists of a stage to read data from the general-purpose registers (GPRs), a Execute stage including pipelines for the ALU, Control-Status registers, GPU control, and Load-Store unit. Finally, the Back-end of the pipeline includes logic for the writeback stage. Between the front and back-end of the pipeline there is a scheduler module that manages the request from the front to the back end of the pipeline. 
 # Core Overview
