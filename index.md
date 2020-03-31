@@ -3,8 +3,8 @@ Vortex is a parameterizable and synthesizable open-source RISC-V GPGPU written i
 ## Document Purpose
 The purpose of this document is to describe the design and implementation of the core as well as provide other useful information on using the core. 
 ## Useful Links
-[Most recent publication](https://arxiv.org/pdf/2002.12151.pdf)
-[High Performance Computer Archectecture Lab](http://comparch.gatech.edu/hparch/index.html)
+- [Most recent publication](https://arxiv.org/pdf/2002.12151.pdf)
+- [High Performance Computer Archectecture Lab](http://comparch.gatech.edu/hparch/index.html)
 
 ## Quick Start
 ```
@@ -12,7 +12,7 @@ code goes here
 ```
 # Introduction
 ## Vortex Core Overview
-![Vortex Core](Vortex_Pipeline.png)
+
 
 The Vortex System implements a SIMT architecture with a minimal RISC-V ISA extension on top of the RISC-V 32 bit integer and multiple extensions (RV32IM) that implements the execution of OpenCL programs. 
 
@@ -25,6 +25,7 @@ Below is a detailed description of the new ISA extension.
 
 The Vortex pipeline is split into four main modules: front_end(), back_end(), scheduler(), and dmem_controller(). The Front-End of the vortex core includes the Fetch and Decode stages and pipeline registers. The Back-End consists of a stage to read data from the general-purpose registers (GPRs), a Execute stage including pipelines for the ALU, Control-Status registers, GPU control, and Load-Store unit. Finally, the Back-end of the pipeline includes logic for the writeback stage. Between the front and back-end of the pipeline there is a scheduler module that manages the request from the front to the back end of the pipeline. 
 # Core Overview
+![Vortex Core](front_end.png)
 ## Fetch 
 During the fetch stage the warp scheduler module is called to decide which warp will be executed during the current cycle. 
 ### Warp Scheduler
@@ -52,6 +53,7 @@ The I-Cache stage retrieves the next instruction from the I-cache once the curre
 ## Decode
 Decodes the current instruction and passes the back end request through the back end request interface. 
 ## Scheduler
+![Vortex Core](back_end.png)
 ## GPR Read/Write Stage
 Warp context
 Contains the general-purpose registers for each thread in the warp
