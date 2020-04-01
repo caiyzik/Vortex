@@ -6,13 +6,8 @@ The purpose of this document is to describe the design and implementation of the
 - [Most recent publication](https://arxiv.org/pdf/2002.12151.pdf)
 - [High Performance Computer Archectecture Lab](http://comparch.gatech.edu/hparch/index.html)
 
-## Quick Start
-```
-code goes here
-```
 # Introduction
 ## Vortex Core Overview
-
 
 The Vortex System implements a SIMT architecture with a minimal RISC-V ISA extension on top of the RISC-V 32 bit integer and multiple extensions (RV32IM) that implements the execution of OpenCL programs. 
 
@@ -51,21 +46,51 @@ Warp barriers (is this also handled in the GPU pipeline?)
 ## I-Cache Interface
 The I-Cache stage retrieves the next instruction from the I-cache once the current warp is determined.  
 ## Decode
-Decodes the current instruction and passes the back end request through the back end request interface. 
+The decode stage decodes the current instruction and passes the back-end request through the back-end request interface. 
 ## Scheduler
+Here a back-end request is stalled if there are conflicts in the registers that need to be accessed. The scheduler instantiates a rename table that tracks the lock status of each general-purpose register in the GPU. A register will be locked if a prior instruction is in the process of writing to it. A destination register is locked during the writeback stage. In order for a back-end request to be processed none of the source registers must be locked. 
 ![Vortex Core](back_end.png)
 ## GPR Read/Write Stage
 Warp context
-Contains the general-purpose registers for each thread in the warp
-Each hardware warp is assigned a warp context
-Handles clone and wspawn instructions
+- Contains the general-purpose registers for each thread in the warp
+- Each hardware warp is assigned a warp context
+- Handles clone and wspawn instructions
+
 ## Execute Pipelines
-### ALU
-ALU now includes a pipeline for Divide and Multiply instructions (Floating Point) 
-### CSR
-I have no idea what this does
-RISC-V specifies four hardware privilege levels that are specified by the 
+
+The execute pipeline includes an ALU pipeline with support for floating-point instructions, a Control-Status Register (CSR) pipeline, a GPU pipeline and the Load-Store Unit. 
+
+### CSR 
+RISC-V specifies control-status registers that are separate from the general purpose register file. Control Status registers can be used to store high-level information about the core such as cycle count and a current status. Each CSR has an associated privilege, each of which is defined by the RISC-V specification. 
+
 ### GPU
-I think this is where the control divergence stuff is actually handled
+The GPU pipeline handles the execution of the wspawn and tmc instructions by updating the active thread mask or the active warp mask reference in the warp scheduling stage. 
+
 ### LSU
+D-Cache Interface 
+
+## Writeback
+The writeback stage manages updates to the general-purpose register file. During the writeback stage destination registers are locked within the rename table to prevent any write-after-read or write-after-write data dependencies between two instructions. 
+
+# Memory
+The all Vortex memory modules build on a general banked cache model. 
+## D-Cache
+Configurable by size, number of ways, and line sizes
+Only one thread can access the cache module per cycle
+In a 32 threads per warp configuration, a memory instruction would take 32 cycles in MEM stage
+
+## L2 Cache
+
+## Shared Memory
+Banked by the number of threads in a configuration
+Mapped to a physical address space and managed by the kernel
+In a 32 threads per warp configuration, a memory instruction could take only 1 cycle if there are
+no bank conflicts
+
+# Terminology
+Single Instruction, Multiple Threads (SIMT)
+Hardware Warp: group of threads that share the same program counter and follow the same execution path with minimal divergence.  Fetching, decoding, and issuing of instructions is done within the same warp. 
+Hardware Thread (also referred to as hart): Each thread has its own set of general purpose registers. The width of the ALU is equal to the number of threads.
+
+
 
