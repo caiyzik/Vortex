@@ -88,9 +88,8 @@ In a 32 threads per warp configuration, a memory instruction could take only 1 c
 no bank conflicts
 
 # Terminology
-Single Instruction, Multiple Threads (SIMT)
-Hardware Warp: group of threads that share the same program counter and follow the same execution path with minimal divergence.  Fetching, decoding, and issuing of instructions is done within the same warp. 
-Hardware Thread (also referred to as hart): Each thread has its own set of general purpose registers. The width of the ALU is equal to the number of threads.
+- _Hardware Warp_: group of threads that share the same program counter and follow the same execution path with minimal divergence.  Fetching, decoding, and issuing of instructions is done within the same warp. 
+- _Hardware Thread_ (also referred to as hart): Each thread has its own set of general purpose registers. The width of the ALU is equal to the number of threads.
 
 
 
