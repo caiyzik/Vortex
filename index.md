@@ -3,7 +3,7 @@ Vortex is a parameterizable and synthesizable open-source RISC-V GPGPU written i
 ## Document Purpose
 The purpose of this document is to describe the design and implementation of the core, as well as to provide other useful information on using the core. 
 ## Useful Links
-- [Most recent publication](https://arxiv.org/pdf/2002.12151.pdf)
+- [Vortex: OpenCL Compatible RISC-V GPGPU](https://arxiv.org/pdf/2002.12151.pdf)
 - [High Performance Computer Architecture Lab](http://comparch.gatech.edu/hparch/index.html)
 
 # Introduction
