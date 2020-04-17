@@ -1,15 +1,15 @@
 # Welcome
 Vortex is a parameterizable and synthesizable open-source RISC-V GPGPU written in Verilog. 
 ## Document Purpose
-The purpose of this document is to describe the design and implementation of the core as well as provide other useful information on using the core. 
+The purpose of this document is to describe the design and implementation of the core, as well as to provide other useful information on using the core. 
 ## Useful Links
 - [Most recent publication](https://arxiv.org/pdf/2002.12151.pdf)
-- [High Performance Computer Archectecture Lab](http://comparch.gatech.edu/hparch/index.html)
+- [High Performance Computer Architecture Lab](http://comparch.gatech.edu/hparch/index.html)
 
 # Introduction
 ## Vortex Core Overview
 
-The Vortex System implements a SIMT architecture with a minimal RISC-V ISA extension on top of the RISC-V 32 bit integer and multiple extensions (RV32IM) that implements the execution of OpenCL programs. 
+The Vortex System implements an SIMT architecture with a minimal RISC-V ISA extension on top of the RISC-V 32 bit integer and multiple extensions (RV32IM) that implement the execution of OpenCL programs. 
 
 Below is a detailed description of the new ISA extension. 
 - ```wspawn``` - spawn new warps at pc
@@ -35,7 +35,7 @@ The warp masks are detailed as follows:
 Each cycle, dispatch selects one warp from the visible warp mask and invalidates that warp. When the visible warp mask is zero, the active mask is refilled by checking which warps are currently active and not stalled. Warps will stay in the active mask until they set their thread mask’s value to zero, or warp zero utilizes wspawn. 
 
 ### Thread Masks and the IPDOM Stack
-The thread mask register determines which threads are active. If a bit in the mask is zero no changes are made to the threads' register file and no changes are made to the cache based on that thread. 
+The thread mask register determines which threads are active. If a bit in the mask is zero, no changes are made to the threads' register file, and no changes are made to the cache based on that thread. 
 
 The IPDOM (Immediate Post Dominator) stack, contained within the warp dispatch module,  handles control divergence. 
 
@@ -60,10 +60,10 @@ Warp Context
 
 ## Execute Pipelines
 
-The Execute stage consists of four execution units: an ALU pipeline with support for floating-point instructions, a Control-Status Register (CSR) unit, a GPU unit and the Load-Store unit. 
+The Execute stage consists of four execution units: an ALU pipeline with support for floating-point instructions, a Control-Status Register (CSR) unit, a GPU unit, and the Load-Store unit. 
 
 ### CSR 
-RISC-V specifies control-status registers that are separate from the general purpose register file. Control-status registers can be used to store high-level information about the core such as cycle count and current status of the core. Each CSR has an associated privilege, each of which are defined by the RISC-V specification. 
+RISC-V specifies control-status registers that are separate from the general purpose register file. Control-status registers can be used to store high-level information about the core, such as cycle count and current status of the core. Each CSR has an associated privilege, each of which is defined by the RISC-V specification. 
 
 ### GPU
 The GPU unit handles the execution of the ```wspawn``` and ```tmc``` instructions by updating the active thread mask or the active warp mask reference in the warp dispatch stage. 
@@ -72,22 +72,20 @@ The GPU unit handles the execution of the ```wspawn``` and ```tmc``` instruction
 D-Cache Interface 
 
 ## Writeback
-The Writeback stage manages updates to the general-purpose register file. During the Writeback stage destination registers are locked within the rename table to prevent any write-after-read or write-after-write data dependencies between two instructions. 
+The Writeback stage manages updates to the general-purpose register file. During the Writeback stage, destination registers are locked within the rename table to prevent any write-after-read or write-after-write data dependencies between two instructions. 
 
 # Memory
 All Vortex memory modules build on a general banked, set-associative cache model. 
-## D-Cache
-Configurable by size, number of ways, and line sizes
-Only one thread can access the cache module per cycle
-In a 32 threads per warp configuration, a memory instruction would take 32 cycles in MEM stage
 
-## L2 Cache
+## D-Cache
+- Configurable by size, number of ways, and line sizes
+- Only one thread can access the cache module per cycle
+- In a 32 threads per warp configuration, a memory instruction would take 32 cycles in MEM stage
 
 ## Shared Memory
-Banked by the number of threads in a configuration
-Mapped to a physical address space and managed by the kernel
-In a 32 threads per warp configuration, a memory instruction could take only 1 cycle if there are
-no bank conflicts
+- Banked by the number of threads in a configuration
+- Mapped to a physical address space and managed by the kernel
+- In a 32 threads per warp configuration, a memory instruction could take only 1 cycle if there are no bank conflicts
 
 # Terminology
 - _Hardware Warp_: group of threads that share the same program counter and follow the same execution path with minimal divergence.  Fetching, decoding, and issuing of instructions is done within the same warp. 
